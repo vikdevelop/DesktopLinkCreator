@@ -2,7 +2,7 @@
 <schemalist>
     <schema id="io.github.vikdevelop.DesktopLinkCreator" path="/io/github/vikdevelop/DesktopLinkCreator/">
         <key name="window-size" type="(ii)">
-            <default>(200, 600)</default>
+            <default>(455, 600)</default>
             <summary>Window size</summary>
         </key>
         <key name="maximized" type="b">
