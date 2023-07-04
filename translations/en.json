@@ -2,7 +2,7 @@
 	"about_app": "About app",
 	"create": "Create",
 	"name": "Name",
-	"url_adress": "URL adress to website (e.g. https://www.google.com)",
+	"url_adress": "URL address of the website (e.g., https://www.google.com)",
 	"icon": "Icon",
 	"select_icon": "Select icon",
 	"desktop_created_status": "Desktop file created!",
