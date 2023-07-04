@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Desktop Link Creator
+Type=Application
+Comment=Create Desktop shortcut for opening website in browser
+Comment[cs]=Vytvořte si zkratku pro otevření webové stránky v prohlížeči
+Exec=run.sh
+Icon=io.github.vikdevelop.DesktopLinkCreator
+Categories=Utility;
