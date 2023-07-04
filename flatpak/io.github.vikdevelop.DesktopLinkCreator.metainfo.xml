@@ -4,16 +4,15 @@
     <id>io.github.vikdevelop.DesktopLinkCreator</id>
     <launchable type="desktop-id">io.github.vikdevelop.DesktopLinkCreator.desktop</launchable>
     <name>Desktop Link creator</name>
-    <summary>Create Desktop shortcut for opening website in browser</summary>
+    <summary>Create a desktop shortcut for opening your favorite website in the browser</summary>
+    <summary xml:lang="cs_CZ">Vytvořte si zástupce na ploše pro otevření své oblíbené webové stránky v prohlížeči</summary>
     <metadata_license>CC0-1.0</metadata_license>
     <project_license>GPL-3.0-or-later</project_license>
     <developer_name>vikdevelop</developer_name>
     
     <description>
-      <p>Create Desktop shortcut for opening website in browser</p>
-    </description>
-    <description xml:lang="cs_CZ">
-      <p>Vytvořte si zkratku na ploše pro zobrazení webové stránky v prohlížeči</p>
+      <p>The app allows you to create shortcuts in your desktop environment for opening the URL of your favorite website in a browser.</p>
+      <p xml:lang="cs_CZ">Aplikace umožňuje vytvořit zástupce na ploše pro otevření URL oblíbené webové stránky v prohlížeči.</p>
     </description>
     
     <url type="homepage">https://github.com/vikdevelop/DesktopLinkCreator</url>
