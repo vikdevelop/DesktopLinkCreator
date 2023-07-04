@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<schemalist>
+    <schema id="io.github.vikdevelop.DesktopLinkCreator" path="/io/github/vikdevelop/DesktopLinkCreator/">
+        <key name="window-size" type="(ii)">
+            <default>(200, 600)</default>
+            <summary>Window size</summary>
+        </key>
+        <key name="maximized" type="b">
+            <default>false</default>
+            <summary>Window maximized state</summary>
+        </key>
+    </schema>
+</schemalist>
