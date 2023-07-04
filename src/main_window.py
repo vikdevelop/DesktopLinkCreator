@@ -186,12 +186,10 @@ class BTApp(Adw.Application):
         dialog = Adw.AboutWindow(transient_for=app.get_active_window())
         dialog.set_application_name("Desktop Link Creator")
         dialog.set_developer_name("vikdevelop")
-        """
         if r_lang == 'en':
             print("")
         else:
             dialog.set_translator_credits(_["translator_credits"])
-        """
         dialog.set_license_type(Gtk.License(Gtk.License.GPL_3_0))
         dialog.set_website("https://github.com/vikdevelop/DesktopLinkCreator")
         dialog.set_issue_url("https://github.com/vikdevelop/DesktopLinkCreator/issues")
