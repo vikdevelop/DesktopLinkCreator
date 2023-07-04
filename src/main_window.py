@@ -12,6 +12,10 @@ from gi.repository import Gtk, Adw, Gio, GLib
 p_lang = locale.getlocale()[0]
 r_lang = p_lang[:-3]
 
+locale = open(f"/app/translations/{r_lang}.json")
+
+_ = json.load(locale)
+
 class BTWindow(Gtk.Window):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -21,21 +25,19 @@ class BTWindow(Gtk.Window):
         self.application = kwargs.get('application')
         self.connect("close-request", self.on_close)
         
-        self.set_size_request(503, 606)
+        self.set_size_request(455, 600)
         
-        """
-        self.settings = Gio.Settings.new_with_path("io.github.vikdevelop.BinaryTranslator", "/io/github/vikdevelop/BinaryTranslator/")
+        self.settings = Gio.Settings.new_with_path("io.github.vikdevelop.DesktopLinkCreator", "/io/github/vikdevelop/DesktopLinkCreator/")
         
         (width, height) = self.settings["window-size"]
         self.set_default_size(width, height)
         
-        if self.settings["is-maximized"]:
+        if self.settings["maximized"]:
             self.maximize()
-        """
         
         # App menu
         self.menu_button_model = Gio.Menu()
-        self.menu_button_model.append("About app", 'app.about')
+        self.menu_button_model.append(_["about_app"], 'app.about')
         self.menu_button = Gtk.MenuButton.new()
         self.menu_button.set_icon_name(icon_name='open-menu-symbolic')
         self.menu_button.set_menu_model(menu_model=self.menu_button_model)
@@ -45,8 +47,8 @@ class BTWindow(Gtk.Window):
         self.translateButton = Gtk.Button.new()
         self.tr_button_box = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 5)
         self.tr_button_box.append(Gtk.Image.new_from_icon_name( \
-            'transmission-symbolic'))
-        self.tr_button_box.append(Gtk.Label.new("Create"))
+            'document-new-symbolic'))
+        self.tr_button_box.append(Gtk.Label.new(_["create"]))
         self.translateButton.set_child(self.tr_button_box)
         self.translateButton.set_can_focus(True)
         self.translateButton.add_css_class('suggested-action')
@@ -89,24 +91,25 @@ class BTWindow(Gtk.Window):
         
         # Name entry
         self.nameEntry = Adw.EntryRow.new()
-        self.nameEntry.set_title("Name")
+        self.nameEntry.set_title(_["name"])
         self.nameEntry.connect('changed', self.on_nameEntry_changed)
         self.entryBox.append(self.nameEntry)
         
         # URL entry
         self.urlEntry = Adw.EntryRow()
-        self.urlEntry.set_title("URL adress to website (e.g. https://www.google.com)")
+        self.urlEntry.set_title(_["url_adress"])
         self.urlEntry.connect('changed', self.on_urlEntry_changed)
         self.entryBox.append(self.urlEntry)
         
         # Icon button
         self.icon_button = Gtk.Button.new_from_icon_name("document-open-symbolic")
         self.icon_button.add_css_class('flat')
+        self.icon_button.set_tooltip_text(_["select_icon"])
         self.icon_button.connect('clicked', self.open_icon_chooser)
         
         # Icon entry
         self.iconEntry = Adw.EntryRow()
-        self.iconEntry.set_title("Icon")
+        self.iconEntry.set_title(_["icon"])
         self.iconEntry.set_editable(False)
         self.iconEntry.add_suffix(self.icon_button)
         self.entryBox.append(self.iconEntry)
@@ -130,7 +133,7 @@ class BTWindow(Gtk.Window):
         
         self.icon_chooser = Gtk.FileDialog.new()
         self.icon_chooser.set_modal(True)
-        self.icon_chooser.set_title("Select icon")
+        self.icon_chooser.set_title(_["select_icon"])
         
         self.png_filter = Gtk.FileFilter.new()
         self.png_filter.set_name("PNG")
@@ -151,15 +154,27 @@ class BTWindow(Gtk.Window):
         
     # Translate text to binary and vice versa
     def create_desktop(self, w):
-        name_with_spaces = self.nameEntry.get_text()
-        name_without_spaces = name_with_spaces.replace(" ", "_")
-        with open(f"{Path.home()}/.local/share/applications/{name_without_spaces}.desktop", "w") as d:
-            d.write(f'[Desktop Entry]\nName={self.nameEntry.get_text()}\nType=Application\nURL={self.urlEntry.get_text()}\nExec=/usr/bin/xdg-open {self.urlEntry.get_text()}\nIcon={self.iconEntry.get_text()}')
-        self.toast_done = Adw.Toast.new(title='Desktop file created!')
-        self.toast_overlay.add_toast(self.toast_done)
+        if self.nameEntry.get_text() == "":
+            self.err_toast()
+        elif self.urlEntry.get_text() == "":
+            self.err_toast()
+        elif self.iconEntry.get_text() == "":
+            self.err_toast()
+        else:
+            name_with_spaces = self.nameEntry.get_text()
+            name_without_spaces = name_with_spaces.replace(" ", "_")
+            with open(f"{Path.home()}/.local/share/applications/{name_without_spaces}.desktop", "w") as d:
+                d.write(f'[Desktop Entry]\nName={self.nameEntry.get_text()}\nType=Application\nURL={self.urlEntry.get_text()}\nExec=/usr/bin/xdg-open {self.urlEntry.get_text()}\nIcon={self.iconEntry.get_text()}')
+            self.toast_done = Adw.Toast.new(title=_["desktop_created_status"])
+            self.toast_overlay.add_toast(self.toast_done)
+    def err_toast(self):
+        self.blankToast = Adw.Toast.new(title=_["entry_blank"])
+        self.toast_overlay.add_toast(self.blankToast)
             
     def on_close(self, widget, *args):
-        print("")
+        (width, height) = self.get_default_size()
+        self.settings["window-size"] = (width, height)
+        self.settings["maximized"] = self.is_maximized()
         
 class BTApp(Adw.Application):
     def __init__(self, **kwargs):
