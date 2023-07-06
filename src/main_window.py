@@ -12,7 +12,10 @@ from gi.repository import Gtk, Adw, Gio, GLib
 p_lang = locale.getlocale()[0]
 r_lang = p_lang[:-3]
 
-locale = open(f"/app/translations/{r_lang}.json")
+try:
+    locale = open(f"/app/translations/{r_lang}.json")
+except:
+    locale = open("/app/translations/en.json")
 
 _ = json.load(locale)
 
