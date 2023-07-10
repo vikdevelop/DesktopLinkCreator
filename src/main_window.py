@@ -46,7 +46,7 @@ class BTWindow(Gtk.Window):
         self.menu_button.set_menu_model(menu_model=self.menu_button_model)
         self.headerbar.pack_end(child=self.menu_button)
         
-        # Translate button
+        # Create button
         self.translateButton = Gtk.Button.new()
         self.tr_button_box = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 5)
         self.tr_button_box.append(Gtk.Image.new_from_icon_name( \
@@ -64,7 +64,8 @@ class BTWindow(Gtk.Window):
         self.toast_overlay.set_margin_end(margin=1)
         self.toast_overlay.set_margin_bottom(margin=1)
         self.toast_overlay.set_margin_start(margin=1)
-        
+
+        # Set Adw.ToastOverlay() as a primary child
         self.set_child(self.toast_overlay)
         
         # primary Gtk.Box
@@ -74,15 +75,18 @@ class BTWindow(Gtk.Window):
         self.binaryBox.set_margin_start(15)
         self.binaryBox.set_margin_end(15)
         self.toast_overlay.set_child(self.binaryBox)
-        
+
+        # Widget showing icon of desktop file
         self.iconImage = Gtk.Image.new()
         self.iconImage.set_from_icon_name("io.github.vikdevelop.DesktopLinkCreator")
         self.iconImage.set_pixel_size(128)
         self.binaryBox.append(self.iconImage)
-        
+
+        # Widget showing name of desktop file
         self.nameLabel = Gtk.Label.new()
         self.binaryBox.append(self.nameLabel)
-        
+
+        # Widget showing description of desktop file
         self.urlLabel = Gtk.Label.new()
         self.binaryBox.append(self.urlLabel)
         
@@ -116,10 +120,12 @@ class BTWindow(Gtk.Window):
         self.iconEntry.set_editable(False)
         self.iconEntry.add_suffix(self.icon_button)
         self.entryBox.append(self.iconEntry)
-        
+
+    # Get text from nameEntry for using in Gtk.nameLabel
     def on_nameEntry_changed(self, nameEntry):
         self.nameLabel.set_markup(f"<big><b>{self.nameEntry.get_text()}</b></big>")
-        
+
+    # Get text from urlEntry for using in Gtk.urlLabel
     def on_urlEntry_changed(self, urlEntry):
         self.urlLabel.set_markup(f"{self.urlEntry.get_text()}")
         
@@ -155,7 +161,7 @@ class BTWindow(Gtk.Window):
         self.icon_chooser.set_filters(self.file_filter_list)
         self.icon_chooser.open(self, None, apply_selected, None)
         
-    # Translate text to binary and vice versa
+    # Create desktop file
     def create_desktop(self, w):
         if self.nameEntry.get_text() == "":
             self.err_toast()
@@ -170,10 +176,13 @@ class BTWindow(Gtk.Window):
                 d.write(f'[Desktop Entry]\nName={self.nameEntry.get_text()}\nType=Application\nURL={self.urlEntry.get_text()}\nExec=/usr/bin/xdg-open {self.urlEntry.get_text()}\nIcon={self.iconEntry.get_text()}')
             self.toast_done = Adw.Toast.new(title=_["desktop_created_status"])
             self.toast_overlay.add_toast(self.toast_done)
+
+    # Show error toast if entry is empty
     def err_toast(self):
         self.blankToast = Adw.Toast.new(title=_["entry_blank"])
         self.toast_overlay.add_toast(self.blankToast)
-            
+
+    # Action after closing application
     def on_close(self, widget, *args):
         (width, height) = self.get_default_size()
         self.settings["window-size"] = (width, height)
