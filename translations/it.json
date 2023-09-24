@@ -7,6 +7,10 @@
 	"select_icon": "Seleziona icona",
 	"desktop_created_status": "File desktop creato!",
 	"entry_blank": "La voce è vuota",
+	"remove_shortcuts": "Remove installed shortcuts",
+	"remove_shortcuts_desc": "You have not any installed desktop shortcuts",
+	"cancel": "Cancel",
+	"remove": "Remove",
 	"summary": "Crea un collegamento sul desktop per aprire il tuo sito Web preferito nel browser.",
 	"description": "L'app ti consente di creare scorciatoie nel tuo ambiente desktop per aprire l'URL del tuo sito web preferito in un browser.",
 	"translator_credits": "Albano Battistella"
