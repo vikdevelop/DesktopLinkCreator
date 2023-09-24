@@ -21,6 +21,9 @@ except:
 
 _ = json.load(locale)
 
+if not os.path.exists(f"{Path.home()}/.local/bin/open_shortcut.sh"):
+    os.system("cp /app/open_shortcut.sh ~/.local/bin/open_shortcut.sh && chmod +x ~/.local/bin/open_shortcut.sh")
+
 class Dialog_set(Adw.MessageDialog):
     def __init__(self, *args, **kwargs):
         super().__init__(transient_for=app.get_active_window(), **kwargs)
@@ -83,8 +86,8 @@ class BTWindow(Gtk.Window):
         
         # App menu
         self.menu_button_model = Gio.Menu()
+        self.menu_button_model.append(_["remove_shortcuts"], "app.set-installed")
         self.menu_button_model.append(_["about_app"], 'app.about')
-        self.menu_button_model.append("Remove installed shortcuts", "app.set-installed")
         self.menu_button = Gtk.MenuButton.new()
         self.menu_button.set_icon_name(icon_name='open-menu-symbolic')
         self.menu_button.set_menu_model(menu_model=self.menu_button_model)
@@ -217,7 +220,7 @@ class BTWindow(Gtk.Window):
             name_with_spaces = self.nameEntry.get_text()
             name_without_spaces = name_with_spaces.replace(" ", "_")
             with open(f"{Path.home()}/.local/share/applications/{name_without_spaces}.dlc.desktop", "w") as d:
-                d.write(f'[Desktop Entry]\nName={self.nameEntry.get_text()}\nType=Application\nURL={self.urlEntry.get_text()}\nExec=/usr/bin/xdg-open {self.urlEntry.get_text()}\nIcon={self.iconEntry.get_text()}')
+                d.write(f'[Desktop Entry]\nName={self.nameEntry.get_text()}\nType=Application\nURL={self.urlEntry.get_text()}\nExec={Path.home()}/.local/bin/open_shortcut.sh {self.urlEntry.get_text()}\nIcon={self.iconEntry.get_text()}')
             self.toast_done = Adw.Toast.new(title=_["desktop_created_status"])
             self.toast_overlay.add_toast(self.toast_done)
 
