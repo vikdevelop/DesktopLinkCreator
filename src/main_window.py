@@ -4,7 +4,9 @@ import os
 import locale
 from pathlib import Path
 import json
+import glob
 import gi
+import webbrowser
 gi.require_version('Gtk', '4.0')
 gi.require_version('Adw', '1')
 from gi.repository import Gtk, Adw, Gio, GLib
@@ -18,6 +20,47 @@ except:
     locale = open("/app/translations/en.json")
 
 _ = json.load(locale)
+
+class Dialog_set(Adw.MessageDialog):
+    def __init__(self, *args, **kwargs):
+        super().__init__(transient_for=app.get_active_window(), **kwargs)
+        self.set_heading(_["remove_shortcuts"])
+        self.set_body_use_markup(True)
+
+        # Box for appending widgets
+        self.setdBox = Gtk.ListBox.new()
+        self.setdBox.set_selection_mode(mode=Gtk.SelectionMode.NONE)
+        self.setdBox.get_style_context().add_class(class_name='boxed-list')
+        self.set_extra_child(self.setdBox)
+        self.add_response('cancel', _["cancel"])
+        
+        os.chdir(f"{Path.home()}/.local/share/applications")
+        
+        if glob.glob(f"*.dlc.desktop") == []:
+            self.set_body(_["remove_shortcuts_desc"])
+        else:
+            get_dir_content = glob.glob(f"*.dlc.desktop")
+            actions = Gtk.StringList.new(strings=get_dir_content)
+            
+            self.import_row = Adw.ComboRow.new()
+            self.import_row.set_use_markup(True)
+            self.import_row.set_use_underline(True)
+            self.import_row.set_title("")
+            self.import_row.set_title_lines(2)
+            self.import_row.set_subtitle_lines(4)
+            self.import_row.set_model(model=actions)
+            self.setdBox.append(child=self.import_row)
+            self.add_response('ok', _["remove"])
+        
+        self.set_response_appearance('ok', Adw.ResponseAppearance.DESTRUCTIVE)
+        self.connect('response', self.dialog_response)
+        
+        self.show()
+        
+    def dialog_response(self, dialog, response):
+        sel_item = self.import_row.get_selected_item()
+        if response == 'ok':
+            os.popen(f'rm {sel_item.get_string()}')
 
 class BTWindow(Gtk.Window):
     def __init__(self, *args, **kwargs):
@@ -41,6 +84,7 @@ class BTWindow(Gtk.Window):
         # App menu
         self.menu_button_model = Gio.Menu()
         self.menu_button_model.append(_["about_app"], 'app.about')
+        self.menu_button_model.append("Remove installed shortcuts", "app.set-installed")
         self.menu_button = Gtk.MenuButton.new()
         self.menu_button.set_icon_name(icon_name='open-menu-symbolic')
         self.menu_button.set_menu_model(menu_model=self.menu_button_model)
@@ -154,9 +198,9 @@ class BTWindow(Gtk.Window):
         self.svg_filter.set_name("SVG")
         self.svg_filter.add_pattern('*.svg')
         self.file_filter_list = Gio.ListStore.new(Gtk.FileFilter);
-        self.file_filter_list.append(self.svg_filter)
         self.file_filter_list.append(self.png_filter)
         self.file_filter_list.append(self.jpg_filter)
+        self.file_filter_list.append(self.svg_filter)
         
         self.icon_chooser.set_filters(self.file_filter_list)
         self.icon_chooser.open(self, None, apply_selected, None)
@@ -172,7 +216,7 @@ class BTWindow(Gtk.Window):
         else:
             name_with_spaces = self.nameEntry.get_text()
             name_without_spaces = name_with_spaces.replace(" ", "_")
-            with open(f"{Path.home()}/.local/share/applications/{name_without_spaces}.desktop", "w") as d:
+            with open(f"{Path.home()}/.local/share/applications/{name_without_spaces}.dlc.desktop", "w") as d:
                 d.write(f'[Desktop Entry]\nName={self.nameEntry.get_text()}\nType=Application\nURL={self.urlEntry.get_text()}\nExec=/usr/bin/xdg-open {self.urlEntry.get_text()}\nIcon={self.iconEntry.get_text()}')
             self.toast_done = Adw.Toast.new(title=_["desktop_created_status"])
             self.toast_overlay.add_toast(self.toast_done)
@@ -192,6 +236,7 @@ class BTApp(Adw.Application):
     def __init__(self, **kwargs):
         super().__init__(**kwargs, flags=Gio.ApplicationFlags.FLAGS_NONE)
         self.create_action('about', self.on_about_action, ["F1"])
+        self.create_action('set-installed', self.on_set_installed)
         self.connect('activate', self.on_activate)
         
     def on_about_action(self, action, param):
@@ -211,7 +256,10 @@ class BTApp(Adw.Application):
         icon = "io.github.vikdevelop.DesktopLinkCreator"
         dialog.set_version(version)
         dialog.set_application_icon(icon)
-        dialog.show()    
+        dialog.show()
+        
+    def on_set_installed(self, action, param):
+        self.dialog = Dialog_set(self)
     
     def create_action(self, name, callback, shortcuts=None):
         action = Gio.SimpleAction.new(name, None)
