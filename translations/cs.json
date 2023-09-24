@@ -7,6 +7,10 @@
 	"select_icon": "Vybrat ikonu",
 	"desktop_created_status": "Zástupce vytvořen!",
 	"entry_blank": "Pole je prázdné",
+	"remove_shortcuts": "Odstranit nainstalované zkratky",
+	"remove_shortcuts_desc": "Nemáte nainstalované žádné desktopové zkratky",
+	"cancel": "Zrušit",
+	"remove": "Odstranit",
 	"summary": "Vytvořte si zástupce na ploše pro otevření vašeho oblíbeného webu v prohlížeči",
 	"description": "Aplikace vám umožňuje vytvořit zkratky ve vašem desktopovém prostředí pro otevření URL vašich oblíbených webů v prohlížeči.",
 	"translator_credits": "vikdevelop https://github.com/vikdevelop"
