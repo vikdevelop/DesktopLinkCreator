@@ -15,6 +15,7 @@ modules:
     build-commands:
        - install -Dm755 -t /app/bin run.sh
        - install -Dm755 -t /app src/main_window.py
+       - install -Dm755 -t /app src/open_shortcut.sh
        - install -D -t /app/share/applications flatpak/io.github.vikdevelop.DesktopLinkCreator.desktop
        - install -D -t /app/share/icons/hicolor/scalable/apps flatpak/icons/io.github.vikdevelop.DesktopLinkCreator.png
        - install -D -t /app/share/metainfo flatpak/io.github.vikdevelop.DesktopLinkCreator.metainfo.xml
