@@ -7,7 +7,11 @@
 	"select_icon": "Select icon",
 	"desktop_created_status": "Desktop file created!",
 	"entry_blank": "Entry is empty",
-	"summary": "Create a desktop shortcut for opening your favorite website in the browser.",
+	"remove_shortcuts": "Remove installed shortcuts",
+	"remove_shortcuts_desc": "You have not any installed desktop shortcuts",
+	"cancel": "Cancel",
+	"remove": "Remove",
+	"summary": "Create a desktop shortcut for opening your favorite website in the browser",
 	"description": "The app allows you to create shortcuts in your desktop environment for opening the URL of your favorite website in a browser.",
 	"translator_credits": "Translator <email> or link-to-github"
 }
